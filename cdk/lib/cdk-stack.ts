@@ -15,7 +15,8 @@ export class CdkStack extends Stack {
         input: CodePipelineSource.gitHub('best-cloud/cdk-pipeline-ecs', 'main', {
           authentication: SecretValue.secretsManager('/my/github/token'),
         }),
-        commands: ['npm ci', 'npm run build', 'npx cdk synth'],
+        commands: ['cd cdk', 'npm ci', 'npm run build', 'npx cdk synth'],
+        primaryOutputDirectory: 'cdk/cdk.out',
       }),
     });
   }
