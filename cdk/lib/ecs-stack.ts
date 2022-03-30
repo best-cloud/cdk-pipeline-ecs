@@ -1,4 +1,4 @@
-import { Stack, StackProps } from 'aws-cdk-lib';
+import { Stack, StackProps, CfnOutput } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { Vpc } from 'aws-cdk-lib/aws-ec2';
 import { Cluster, ContainerImage } from 'aws-cdk-lib/aws-ecs';
@@ -6,6 +6,8 @@ import { ApplicationLoadBalancedFargateService } from 'aws-cdk-lib/aws-ecs-patte
 import { join } from 'path';
 
 export class EcsStack extends Stack {
+  public readonly loadBalancerAddress: CfnOutput;
+
   constructor(scope: Construct, id: string, vpc: Vpc, props?: StackProps) {
     super(scope, id, props);
 
@@ -14,7 +16,7 @@ export class EcsStack extends Stack {
     });
 
     // Create a load-balanced Fargate service and make it public
-    new ApplicationLoadBalancedFargateService(this, 'SimpleHttpFargateService', {
+    const fargate = new ApplicationLoadBalancedFargateService(this, 'SimpleHttpFargateService', {
       cluster, // Required
       cpu: 256, // Default is 256
       desiredCount: 1, // Default is 1
@@ -24,6 +26,10 @@ export class EcsStack extends Stack {
       },
       memoryLimitMiB: 512, // Default is 512
       publicLoadBalancer: true, // Default is false
+    });
+
+    this.loadBalancerAddress = new CfnOutput(this, 'SimpleHttpFargateServiceEndpoint', {
+      value: fargate.loadBalancer.loadBalancerDnsName,
     });
   }
 }

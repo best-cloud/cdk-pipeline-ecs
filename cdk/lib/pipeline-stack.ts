@@ -19,6 +19,21 @@ export class PipelineStack extends Stack {
       }),
     });
 
-    pipeline.addStage(new ServiceStage(this, 'Alpha', props));
+    const alphaStage = new ServiceStage(this, 'Alpha', props);
+    pipeline.addStage(alphaStage, {
+      post: [
+        new ShellStep('IntegrationTest', {
+          commands: [
+            // Use 'curl' to GET the given URL and fail if it returns an error
+            'curl -Ssf $ENDPOINT_URL',
+          ],
+          envFromCfnOutputs: {
+            // Get the stack Output from the Stage and make it available in
+            // the shell script as $ENDPOINT_URL.
+            ENDPOINT_URL: alphaStage.loadBalancerAddress,
+          },
+        }),
+      ],
+    });
   }
 }
