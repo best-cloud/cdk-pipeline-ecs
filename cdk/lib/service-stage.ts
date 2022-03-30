@@ -11,7 +11,9 @@ export class ServiceStage extends Stage {
     super(scope, id, props);
 
     const vpcStack = new VpcStack(this, 'VpcStack');
-    const ecsStack = new EcsStack(this, 'SimpleHttpServiceEcsStack', vpcStack.vpc);
+    const ecsStack = new EcsStack(this, 'SimpleHttpServiceEcsStack', {
+      vpc: vpcStack.vpc,
+    });
 
     this.loadBalancerAddress = ecsStack.loadBalancerAddress;
   }

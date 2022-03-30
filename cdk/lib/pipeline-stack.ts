@@ -19,7 +19,7 @@ export class PipelineStack extends Stack {
       }),
     });
 
-    const alphaStage = new ServiceStage(this, 'Alpha', props);
+    const alphaStage = new ServiceStage(this, 'Alpha', { env: { account: '376200971131', region: 'us-east-1' } });
     pipeline.addStage(alphaStage, {
       post: [
         new ShellStep('IntegrationTest', {
@@ -35,5 +35,7 @@ export class PipelineStack extends Stack {
         }),
       ],
     });
+
+    pipeline.addStage(new ServiceStage(this, 'Prod', { env: { account: '376200971131', region: 'us-west-2' } }));
   }
 }

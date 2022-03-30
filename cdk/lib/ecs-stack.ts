@@ -5,14 +5,18 @@ import { Cluster, ContainerImage } from 'aws-cdk-lib/aws-ecs';
 import { ApplicationLoadBalancedFargateService } from 'aws-cdk-lib/aws-ecs-patterns';
 import { join } from 'path';
 
+interface EcsStackProps extends StackProps {
+  vpc: Vpc,
+}
+
 export class EcsStack extends Stack {
   public readonly loadBalancerAddress: CfnOutput;
 
-  constructor(scope: Construct, id: string, vpc: Vpc, props?: StackProps) {
+  constructor(scope: Construct, id: string, props: EcsStackProps) {
     super(scope, id, props);
 
     const cluster = new Cluster(this, 'SimpleHttpServiceCluster', {
-      vpc,
+      vpc: props.vpc,
     });
 
     // Create a load-balanced Fargate service and make it public
