@@ -6,26 +6,23 @@ import { ApplicationLoadBalancedFargateService } from 'aws-cdk-lib/aws-ecs-patte
 import { join } from 'path';
 
 export class EcsStack extends Stack {
-  constructor(scope: Construct, id: string, props?: StackProps) {
+  constructor(scope: Construct, id: string, vpc: Vpc, props?: StackProps) {
     super(scope, id, props);
 
-    // The code that defines your stack goes here
-
-    const vpc = new Vpc(this, 'MyVpc', {
-      maxAzs: 3, // Default is all AZs in region
-    });
-
-    const cluster = new Cluster(this, 'MyCluster', {
+    const cluster = new Cluster(this, 'SimpleHttpServiceCluster', {
       vpc,
     });
 
     // Create a load-balanced Fargate service and make it public
-    new ApplicationLoadBalancedFargateService(this, 'MyFargateService', {
+    new ApplicationLoadBalancedFargateService(this, 'SimpleHttpFargateService', {
       cluster, // Required
-      cpu: 512, // Default is 256
+      cpu: 256, // Default is 256
       desiredCount: 1, // Default is 1
-      taskImageOptions: { image: ContainerImage.fromAsset(join(__dirname, '../../', 'service')) },
-      memoryLimitMiB: 2048, // Default is 512
+      taskImageOptions: {
+        image: ContainerImage.fromAsset(join(__dirname, '../../', 'service')),
+        containerPort: 8080,
+      },
+      memoryLimitMiB: 512, // Default is 512
       publicLoadBalancer: true, // Default is false
     });
   }
