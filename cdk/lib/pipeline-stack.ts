@@ -1,4 +1,4 @@
-import { Stack, StackProps } from 'aws-cdk-lib';
+import { Stack, StackProps, Fn } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { CodePipeline, CodePipelineSource, ShellStep } from 'aws-cdk-lib/pipelines';
 
@@ -20,6 +20,8 @@ export class PipelineStack extends Stack {
     });
 
     const alphaStage = new ServiceStage(this, 'Alpha', props);
+    console.log('3=-=-=-=-=-');
+    console.log(Fn.ref('ServiceURL'));
     pipeline.addStage(alphaStage, {
       post: [
         new ShellStep('IntegrationTest', {

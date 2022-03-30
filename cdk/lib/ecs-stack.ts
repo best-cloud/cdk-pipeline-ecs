@@ -1,4 +1,6 @@
-import { Stack, StackProps, CfnOutput } from 'aws-cdk-lib';
+import {
+  Stack, StackProps, CfnOutput, Fn,
+} from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { Vpc } from 'aws-cdk-lib/aws-ec2';
 import { Cluster, ContainerImage } from 'aws-cdk-lib/aws-ecs';
@@ -28,6 +30,8 @@ export class EcsStack extends Stack {
       publicLoadBalancer: true, // Default is false
     });
 
+    console.log('1=-=-=-=-=-');
+    console.log(Fn.ref('ServiceURL'));
     this.loadBalancerAddress = new CfnOutput(this, 'SimpleHttpFargateServiceEndpoint', {
       value: fargate.loadBalancer.loadBalancerDnsName,
     });
