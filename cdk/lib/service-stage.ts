@@ -1,6 +1,4 @@
-import {
-  Stage, StageProps, CfnOutput, Fn,
-} from 'aws-cdk-lib';
+import { Stage, StageProps, CfnOutput } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 
 import { VpcStack } from './vpc-stack';
@@ -16,8 +14,5 @@ export class ServiceStage extends Stage {
     const ecsStack = new EcsStack(this, 'SimpleHttpServiceEcsStack', vpcStack.vpc);
 
     this.loadBalancerAddress = ecsStack.loadBalancerAddress;
-
-    console.log('2=-=-=-=-=-');
-    console.log(Fn.ref('ServiceURL'));
   }
 }
