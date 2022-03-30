@@ -24,7 +24,7 @@ export class EcsStack extends Stack {
       cluster, // Required
       cpu: 512, // Default is 256
       desiredCount: 1, // Default is 1
-      taskImageOptions: { image: ContainerImage.fromAsset(join(__dirname, 'service')) },
+      taskImageOptions: { image: ContainerImage.fromAsset(join(__dirname, '../../', 'service')) },
       memoryLimitMiB: 2048, // Default is 512
       publicLoadBalancer: true, // Default is false
     });

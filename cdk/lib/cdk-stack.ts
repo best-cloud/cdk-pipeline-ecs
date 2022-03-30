@@ -4,6 +4,7 @@ import {
   CodePipeline, CodePipelineSource, ShellStep,
 } from 'aws-cdk-lib/pipelines';
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
+import { ServiceStage } from './service-stage';
 
 export class CdkStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -19,5 +20,7 @@ export class CdkStack extends Stack {
         primaryOutputDirectory: 'cdk/cdk.out',
       }),
     });
+
+    pipeline.addStage(new ServiceStage(this, 'Alpha', props));
   }
 }
